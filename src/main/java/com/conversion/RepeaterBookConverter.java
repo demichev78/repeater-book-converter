@@ -32,6 +32,7 @@ public class RepeaterBookConverter implements IConverter {
     public static final String KML_EXTENSION = ".kml";
     public static final String M2_POSTFIX = "-2m";
     public static final String CM70_POSTFIX = "-70cm";
+    public static final String RESULTS_FOLDER_NAME = "results";
     private HttpClient client = new HttpClient();
 
     @Override
@@ -67,7 +68,13 @@ public class RepeaterBookConverter implements IConverter {
     }
 
     private void writeKmlFile(String payload, String fileName) throws IOException {
-        Files.write(Paths.get(fileName), payload.getBytes());
+        File directory = new File(RESULTS_FOLDER_NAME);
+        if (! directory.exists()){
+            if (!directory.mkdir()) {
+                throw new IOException("Cannot create folder " + RESULTS_FOLDER_NAME);
+            }
+        }
+        Files.write(Paths.get(RESULTS_FOLDER_NAME + File.separator + fileName), payload.getBytes());
     }
 
     private String generateXmlKml(List<Marker> markers) {
